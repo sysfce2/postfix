@@ -2586,7 +2586,32 @@ extern int var_local_rcpt_code;
 				" $" VAR_SMTP_HEAD_CHKS \
 				" $" VAR_SMTP_MIME_CHKS \
 				" $" VAR_SMTP_NEST_CHKS \
-				" $" VAR_SMTPD_REJECT_FILTER_MAPS
+				" $" VAR_SMTPD_REJECT_FILTER_MAPS \
+				" $" VAR_DEBUG_PEER_LIST \
+				" $" VAR_ETRN_CHECKS \
+				" $" VAR_FFLUSH_DOMAINS \
+				" $" VAR_FLUSH_ACL \
+				" $" VAR_LMTP_CACHE_DEST \
+				" $" VAR_LOC_RWR_CLIENTS \
+				" $" VAR_MASQ_EXCEPTIONS \
+				" $" VAR_PSC_ACL \
+				" $" VAR_PSC_ALLIST_IF \
+				" $" VAR_PSC_FORBID_CMDS \
+				" $" VAR_QMQPD_CLIENTS \
+				" $" VAR_SHOWQ_ACL \
+				" $" VAR_SMTP_CACHE_DEST \
+				" $" VAR_SMTPD_ACL_PERM_LOG \
+				" $" VAR_SMTPD_FORBID_CMDS \
+				" $" VAR_SMTPD_HOGGERS \
+				" $" VAR_SMTPD_SASL_EXCEPTIONS_NETWORKS \
+				" $" VAR_SMTPD_SASL_MECH_FILTER \
+				" $" VAR_SMTP_REQTLS_POLICY \
+				" $" VAR_SMTP_SASL_MECHS \
+				" $" VAR_SUBMIT_ACL \
+				" $" VAR_VERP_CLIENTS \
+				" $" VAR_XCLIENT_HOSTS \
+				" $" VAR_XFORWARD_HOSTS \
+
 extern char *var_proxy_read_maps;
 
 #define VAR_PROXY_WRITE_MAPS	"proxy_write_maps"

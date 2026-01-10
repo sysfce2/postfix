@@ -30303,3 +30303,30 @@ Apologies for any names omitted.
 
 	Documentation: fixed wrong default in INSTALL and postconf(5).
 	Files: proto/INSTALL.html, proto/postconf.proto.
+
+20260105
+
+	Cleanup: added missing entries to the proxy_read_maps default
+	value for more complete coverage. File: global/mail_params.h.
+
+20260106
+
+	Cleanup: added more missing entries to the proxy_read_maps
+	default value, based on documentation that parameters support
+	type:table inputs. Files: mantools/check-proxy-type-table,
+	global/mail_params.h
+
+20260107
+
+	Cleanup: added missing initialization for parameters with
+	a non-empty default value that specifies a lookup table.
+	File: proxymap/proxymap.c.
+
+	Cleanup: the proxymap service now detects table references
+	in /file/name and in restriction_classes. File: proxymap/proxymap.c
+
+	Feature: export the proxymap authorization tables, for
+	testing, and for potential use by other tools. File:
+	proxymap/proxymap.c
+
+	Cleanup: re-run 'make depend'. File: cleanup/Makefile.in.

@@ -215,3 +215,6 @@ proto  proto socketmap_table qmqpd qmqpd c tls tls_misc c
  verification in progress File verify verify c 
  virtual virtual c 
  with setgid permissions File postlogd postlogd c 
+ default value with a lookup table File proxymap proxymap c 
+ in file name and in restriction_classes File proxymap proxymap c
+ proxymap proxymap c
