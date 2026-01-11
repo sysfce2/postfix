@@ -735,7 +735,7 @@ static void authorize_file_content(const char *);
 
 /* authorize_proxied_maps - recursively authorize maps */
 
-static void authorize_proxied_maps(char *bp)
+static void authorize_proxied_maps(char *bp, const char *origin)
 {
     const char *sep = CHARS_COMMA_SP;
     const char *parens = CHARS_BRACE;
@@ -750,8 +750,7 @@ static void authorize_proxied_maps(char *bp)
 
 	    /* Warn about blatant syntax error. */
 	    if ((err = extpar(&type_name, parens, EXTPAR_FLAG_NONE)) != 0) {
-		msg_warn("bad %s parameter value: %s",
-			 PROXY_MAP_PARAM_NAME(proxy_writer), err);
+		msg_warn("bad syntax in %s content: %s", origin, err);
 		myfree(err);
 		continue;
 	    }
@@ -775,12 +774,11 @@ static void authorize_proxied_maps(char *bp)
 		continue;
 	    /* Warn about blatant syntax error. */
 	    if ((err = extpar(&nested_info, parens, EXTPAR_FLAG_NONE)) != 0) {
-		msg_warn("bad %s parameter value: %s",
-			 PROXY_MAP_PARAM_NAME(proxy_writer), err);
+		msg_warn("bad syntax in %s content: %s", origin, err);
 		myfree(err);
 		continue;
 	    }
-	    authorize_proxied_maps(nested_info);
+	    authorize_proxied_maps(nested_info, origin);
 	    continue;
 	}
 	switch (proxy_exporter) {
@@ -797,12 +795,10 @@ static void authorize_proxied_maps(char *bp)
 		type_name += PROXY_COLON_LEN;
 	    break;
 	}
-	if (strchr(type_name, ':') != 0
-	    && htable_locate(proxy_auth_maps, type_name) == 0) {
-	    (void) htable_enter(proxy_auth_maps, type_name, (void *) 0);
+	if (htable_locate(proxy_auth_maps, type_name) == 0) {
+	    (void) htable_enter(proxy_auth_maps, type_name, mystrdup(origin));
 	    if (msg_verbose)
-		msg_info("allowlisting %s from %s", type_name,
-			 PROXY_MAP_PARAM_NAME(proxy_writer));
+		msg_info("allowlisting %s from %s", type_name, origin);
 	}
     }
 }
@@ -820,7 +816,7 @@ static void authorize_file_content(const char *file_name)
     }
     buf = vstring_alloc(100);
     while (readlline(buf, fp, (int *) 0))
-	authorize_proxied_maps(STR(buf));
+	authorize_proxied_maps(STR(buf), file_name);
     if (vstream_ferror(fp))
 	msg_warn("read %s: %m", file_name);
     vstring_free(buf);
@@ -838,7 +834,7 @@ static void authorize_rest_classes(const char *rest_classes)
     while ((class_name = mystrtok(&bp, CHARS_COMMA_SP)) != 0) {
 	if ((class_val = mail_conf_lookup_eval(class_name)) != 0) {
 	    saved_class_val = mystrdup(class_val);
-	    authorize_proxied_maps(saved_class_val);
+	    authorize_proxied_maps(saved_class_val, VAR_REST_CLASSES);
 	    myfree(saved_class_val);
 	}
     }
@@ -913,7 +909,7 @@ static void pre_jail_init(char *service_name, char **unused_argv)
     saved_filter = mystrdup(proxy_writer ? var_proxy_write_maps :
 			    var_proxy_read_maps);
     proxy_auth_maps = htable_create(13);
-    authorize_proxied_maps(saved_filter);
+    authorize_proxied_maps(saved_filter, PROXY_MAP_PARAM_NAME(proxy_writer));
     myfree(saved_filter);
 
     /*

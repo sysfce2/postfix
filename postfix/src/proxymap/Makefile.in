@@ -45,7 +45,7 @@ empty_proxymap_table: $(PROG)
 	@echo RUN empty_proxymap_table
 	@$(SETUP_FILES)
 	touch -t 197101010000 main.cf
-	MAIL_CONFIG=`pwd` $(SHLIB_ENV) ${VALGRIND} ./$(PROG) \
+	MAIL_CONFIG=. $(SHLIB_ENV) ${VALGRIND} ./$(PROG) \
 	    -SVnexport-all-proxymap | diff /dev/null -
 	@$(CLEANUP_FILES)
 	@echo PASS empty_proxymap_table; echo
@@ -54,7 +54,7 @@ empty_proxywrite_table: $(PROG)
 	@echo RUN empty_proxywrite_table
 	@$(SETUP_FILES)
 	touch -t 197101010000 main.cf
-	MAIL_CONFIG=`pwd` $(SHLIB_ENV) ${VALGRIND} ./$(PROG) \
+	MAIL_CONFIG=. $(SHLIB_ENV) ${VALGRIND} ./$(PROG) \
 	    -SVnexport-all-proxywrite | diff /dev/null -
 	@$(CLEANUP_FILES)
 	@echo PASS empty_proxywrite_table; echo
@@ -65,7 +65,7 @@ proxy_read_map_works_for_proxied: $(PROG)
 	echo local_recipient_maps = proxy:unix:passwd.byname cdb:/some/aliases >> main.cf
 	touch -t 197101010000 main.cf
 	echo unix:passwd.byname > proxy_read_map_works_for_proxied.tmp
-	$(SHLIB_ENV) ${VALGRIND} MAIL_CONFIG=`pwd` ./$(PROG) \
+	MAIL_CONFIG=. $(SHLIB_ENV) ${VALGRIND} ./$(PROG) \
 	    -SVnexport-proxy-proxymap | \
 	    diff proxy_read_map_works_for_proxied.tmp -
 	@$(CLEANUP_FILES) proxy_read_map_works_for_proxied.tmp
@@ -78,7 +78,7 @@ proxy_read_map_works_for_both: $(PROG)
 	touch -t 197101010000 main.cf
 	echo cdb:/some/aliases  > proxy_read_map_works_for_both.tmp
 	echo unix:passwd.byname >> proxy_read_map_works_for_both.tmp
-	$(SHLIB_ENV) ${VALGRIND} MAIL_CONFIG=`pwd` ./$(PROG) \
+	MAIL_CONFIG=. $(SHLIB_ENV) ${VALGRIND} ./$(PROG) \
 	    -SVnexport-all-proxymap | diff proxy_read_map_works_for_both.tmp -
 	@$(CLEANUP_FILES) proxy_read_map_works_for_both.tmp
 	@echo PASS proxy_read_map_works_for_both; echo
@@ -89,7 +89,7 @@ proxy_write_works: $(PROG)
 	echo postscreen_cache_map = proxy:lmdb:/some/path >> main.cf
 	touch -t 197101010000 main.cf
 	echo lmdb:/some/path > proxy_write_works.tmp
-	$(SHLIB_ENV) ${VALGRIND} MAIL_CONFIG=`pwd` ./$(PROG) \
+	MAIL_CONFIG=. $(SHLIB_ENV) ${VALGRIND} ./$(PROG) \
 	    -SVnexport-proxy-proxywrite | \
 	    diff proxy_write_works.tmp -
 	@$(CLEANUP_FILES) proxy_write_works.tmp
@@ -103,7 +103,7 @@ smtpd_restriction_classes_works: $(PROG)
 	echo bar = proxy:lmdb:/some/file >> main.cf
 	touch -t 197101010000 main.cf
 	echo lmdb:/some/file > smtpd_restriction_classes_works.tmp
-	$(SHLIB_ENV) ${VALGRIND} MAIL_CONFIG=`pwd` ./$(PROG) \
+	MAIL_CONFIG=. $(SHLIB_ENV) ${VALGRIND} ./$(PROG) \
 	    -SVnexport-proxy-proxymap | \
 	    diff smtpd_restriction_classes_works.tmp -
 	@$(CLEANUP_FILES) smtpd_restriction_classes_works.tmp
@@ -116,7 +116,7 @@ file_name_works: $(PROG)
 	echo proxy:lmdb:/some/file > file_name_works_file
 	touch -t 197101010000 main.cf
 	echo lmdb:/some/file > file_name_works.tmp
-	$(SHLIB_ENV) ${VALGRIND} MAIL_CONFIG=`pwd` ./$(PROG) \
+	MAIL_CONFIG=. $(SHLIB_ENV) ${VALGRIND} ./$(PROG) \
 	    -SVnexport-proxy-proxymap | \
 	    diff file_name_works.tmp -
 	@$(CLEANUP_FILES) file_name_works.tmp file_name_works_file
@@ -125,10 +125,10 @@ file_name_works: $(PROG)
 ignores_non_dictionary_form: $(PROG)
 	@echo RUN ignores_non_dictionary_form
 	@$(SETUP_FILES)
-	echo "mynetworks = map:/path [123::456]" >> main.cf
+	echo "mynetworks = map:/path [123::456] other_non_dict" >> main.cf
 	touch -t 197101010000 main.cf
 	echo map:/path  > ignores_non_dictionary_form.tmp
-	$(SHLIB_ENV) ${VALGRIND} MAIL_CONFIG=`pwd` ./$(PROG) \
+	MAIL_CONFIG=. $(SHLIB_ENV) ${VALGRIND} ./$(PROG) \
 	    -SVnexport-all-proxymap | diff ignores_non_dictionary_form.tmp -
 	@$(CLEANUP_FILES) ignores_non_dictionary_form.tmp
 	@echo PASS ignores_non_dictionary_form; echo

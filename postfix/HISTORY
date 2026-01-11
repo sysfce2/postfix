@@ -30330,3 +30330,11 @@ Apologies for any names omitted.
 	proxymap/proxymap.c
 
 	Cleanup: re-run 'make depend'. File: cleanup/Makefile.in.
+
+20260111
+
+	Cleanup: proxymap provenance in error and debug logging.
+	File: proxymap/proxymap.c.
+
+	Cleanup: unbroke Valgrind tests. Files: postmulti/Makefile.in,
+	proxymap/Makefile.in.
